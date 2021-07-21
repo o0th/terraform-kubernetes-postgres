@@ -6,7 +6,7 @@ terraform {
 
 resource "kubernetes_deployment" "this" {
   metadata {
-    name      = "postgres"
+    name      = var.name
     namespace = var.namespace
   }
 
@@ -16,20 +16,20 @@ resource "kubernetes_deployment" "this" {
 
     selector {
       match_labels = {
-        "app" = "postgres"
+        "app" = var.name
       }
     }
 
     template {
       metadata {
         labels = {
-          "app" = "postgres"
+          "app" = var.name
         }
       }
 
       spec {
         container {
-          name  = "postgres"
+          name  = var.name
           image = var.image
 
           port {
@@ -70,16 +70,16 @@ resource "kubernetes_deployment" "this" {
 
 resource "kubernetes_service" "this" {
   metadata {
-    name      = "postgres"
+    name      = var.name
     namespace = var.namespace
     labels = {
-      "app" = "postgres"
+      "app" = var.name
     }
   }
 
   spec {
     selector = {
-      "app" = "postgres"
+      "app" = var.name
     }
 
     port {
